@@ -46,8 +46,8 @@ func calculateChecksum(seedData [24]byte) uint8 {
 	var oddNumbersCalc byte
 	for i := 0; i <= 23; i+=2 {
 		var num byte = seedData[i] * seedData[i]
-		if num > 0x10 {
-			num -= 0x9
+		if num > 10 {
+			num -= 9
 		}
 
 		oddNumbersCalc += num
