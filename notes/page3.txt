@@ -1,0 +1,33 @@
+Example calculation from keygen:
+
+[6 3 2 5 3 4 5 1 6 2 4 8 8 3 6 5 4 2 5 3 7 1 4 0]
+[0 3 2 5 3 4 5 1 5 6 4 8 8 3 2 6 4 2 5 3 7 1 4 6]
+trio: 32, binary: 100000, 5-bit num 1: 00001, 5-bit num 2: 00000
+trio: 534, binary: 1000010110, 5-bit num 1: 10000, 5-bit num 2: 10110
+trio: 515, binary: 1000000011, 5-bit num 1: 10000, 5-bit num 2: 00011
+trio: 648, binary: 1010001000, 5-bit num 1: 10100, 5-bit num 2: 01000
+trio: 832, binary: 1101000000, 5-bit num 1: 11010, 5-bit num 2: 00000
+trio: 642, binary: 1010000010, 5-bit num 1: 10100, 5-bit num 2: 00010
+trio: 537, binary: 1000011001, 5-bit num 1: 10000, 5-bit num 2: 11001
+trio: 146, binary: 10010010, 5-bit num 1: 00100, 5-bit num 2: 10010
+Result: MFV9V4R75FRTVUBD
+
+
+Input into Gameboy Shark MX ROM:
+
+MFV9V4R75FRTVUBD
+
+
+Output from Gameboy Shark MX ROM in memory:
+0 3 2 5 3 4 5 1 5 6 4 8 8 3 2 6 4 2 5 3 7 1 4 6
+
+after gamre registration screen jumble the numbers in memory:
+
+6 3 1 5 3 4 5 1 6 2 4 8 8 3 6 5 4 2 5 3 7 2 4 0
+
+
+
+
+checking and looks like byte 3 and byte 22 need to be swapped:
+6 3 1 5 3 4 5 1 6 2 4 8 8 3 6 5 4 2 5 3 7 2 4 0
+6 3 2 5 3 4 5 1 6 2 4 8 8 3 6 5 4 2 5 3 7 1 4 0

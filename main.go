@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var cipher string = "FMT4BIPW7ELSZAH0V6DKRY9GNU5CJQX8"
+var cipher string = "FMT4BIPW7ELSZAHOV6DKRY9GNU5CJQX8"
 
 // generate a random 24 digit number
 // generate and apply a valid checksum
