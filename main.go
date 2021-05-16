@@ -83,14 +83,19 @@ func applyChecksum(seed [24]byte, checksum uint8) [24]byte {
 
 // jumble the 24 numbers in a preset pattern
 // 1. byte 1 swap with byte 24
-// 2. byte 9 swap with byte 16
-// 3. byte 10 swap with byte 15
-// 4. byte 12 swap with byte 13
+// 2. byte 3 swap with byte 22
+// 3. byte 9 swap with byte 16
+// 4. byte 10 swap with byte 15
+// 5. byte 12 swap with byte 13
 
 func byteShiftSeed(seed [24]byte) [24]byte {
 	temp := seed[23]
 	seed[23] = seed[0]
 	seed[0] = temp
+
+	temp = seed[21]
+	seed[21] = seed[2]
+	seed[2] = temp
 
 	temp = seed[15]
 	seed[15] = seed[8]

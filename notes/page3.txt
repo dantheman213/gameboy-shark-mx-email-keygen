@@ -31,3 +31,81 @@ after gamre registration screen jumble the numbers in memory:
 checking and looks like byte 3 and byte 22 need to be swapped:
 6 3 1 5 3 4 5 1 6 2 4 8 8 3 6 5 4 2 5 3 7 2 4 0
 6 3 2 5 3 4 5 1 6 2 4 8 8 3 6 5 4 2 5 3 7 1 4 0
+
+
+TRY AGAIN
+__________
+
+generating seed data...
+[2 8 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 2 7 3]
+checksum calculation
+checksum: 90
+[2 8 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 2 9 0]
+[0 8 2 8 8 1 1 3 8 8 4 8 2 4 4 5 4 2 6 8 2 2 9 2]
+trio: 82, binary: 1010010, 5-bit num 1: 00010, 5-bit num 2: 10010
+trio: 881, binary: 1101110001, 5-bit num 1: 11011, 5-bit num 2: 10001
+trio: 138, binary: 10001010, 5-bit num 1: 00100, 5-bit num 2: 01010
+trio: 848, binary: 1101010000, 5-bit num 1: 11010, 5-bit num 2: 10000
+trio: 244, binary: 11110100, 5-bit num 1: 00111, 5-bit num 2: 10100
+trio: 542, binary: 1000011110, 5-bit num 1: 10000, 5-bit num 2: 11110
+trio: 682, binary: 1010101010, 5-bit num 1: 10101, 5-bit num 2: 01010
+trio: 292, binary: 100100100, 5-bit num 1: 01001, 5-bit num 2: 00100
+Result: TDC6BL5VWRVXYLEB
+
+Process finished with exit code 0
+
+
+
+Input into Gameboy Shark MX ROM:
+TDC6BL5VWRVXYLEB
+
+
+
+Output from Gameboy Shark MX ROM in memory:
+0 8 2 8 8 1 1 3 8 8 4 8 2 4 4 5 4 2 6 8 2 2 9 2
+
+after gamre registration screen jumble the numbers in memory:
+
+2 8 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 2 9 0
+
+expected checksum: 51
+
+try to manually calculate key before programming it:
+
+2 8 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 2 9 0
+becomes
+2 8 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 2 5 1
+becomes
+0. 2 8 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 2 5 1
+1. 1 8 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 2 5 2
+2. 1 2 2 8 8 1 1 3 5 4 4 2 8 4 8 8 4 2 6 8 2 8 5 2
+3. 1 2 2 8 8 1 1 3 8 4 4 2 8 4 8 5 4 2 6 8 2 8 5 2
+4. 1 2 2 8 8 1 1 3 8 8 4 2 8 4 4 5 4 2 6 8 2 8 5 2
+5. 1 2 2 8 8 1 1 3 8 8 4 8 2 4 4 5 4 2 6 8 2 8 5 2 
+
+debugger in go program injecting last value and resuming program results in:
+45C6BL5VWRVXYL5R
+
+expected checksum: 81
+
+
+==============
+
+take a known key:
+
+SHGGGGGGGGGGGGGQ
+
+3 6 6 7 5 9 7 5 9 7 5 9 7 5 9 7 5 9 7 5 9 7 6 5
+
+5 6 7 7 5 9 7 5 7 9 5 7 9 5 7 9 5 9 7 5 9 6 6 3
+
+expected checksum: 6 3
+
+now pass this to half way through go program where byte shifting occurs to see if this part works.
+
+result produced is:
+
+SHGGGGGGGGGGGGGQ
+
+IT WORKS! HAZAA! The problem with the keygen is now known to be in calculating or applying the checksum.
+

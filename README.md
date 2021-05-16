@@ -10,6 +10,8 @@ This app is attempting to reverse engineer the registration key system that is p
 
 ## References
 
+https://gameshark-mx.blogspot.com/2014/03/gameboy-gameshark-mx-review.html
+
 https://web.archive.org/web/20151114112047/http://www.bennvenn.com/mx.html
 
 https://web.archive.org/web/20140920215058/https://www.oocities.org/grinara/
