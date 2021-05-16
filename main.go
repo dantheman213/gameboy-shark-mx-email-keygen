@@ -44,7 +44,7 @@ func calculateChecksum(seedData [24]byte) uint8 {
 	// Odd digits 1/24, 3/24 etc are doubled, if > 10 then 9 is subtracted. These values are added together.
 
 	var oddNumbersCalc byte
-	for i := 0; i <= 23; i+=2 {
+	for i := 0; i <= 21; i+=2 {
 		var num byte = seedData[i] * seedData[i]
 		if num > 10 {
 			num -= 9
@@ -55,7 +55,7 @@ func calculateChecksum(seedData [24]byte) uint8 {
 
 	// Even digits 2/24, 4/24 etc are just added together
 	var evenNumbersCalc byte
-	for i := 1; i <= 23; i+=2 {
+	for i := 1; i <= 21; i+=2 {
 		evenNumbersCalc += seedData[i]
 	}
 
@@ -140,7 +140,7 @@ func calculateCharactersFromNumTrios(seed [24]byte) string {
 		result += getCipherCharAtPos(num2)
 	}
 
-	fmt.Printf("Result: %s\n", result)
+	fmt.Printf("Calculated Gameshark MX ESN Registration Code: %s\n", result)
 	return result
 }
 

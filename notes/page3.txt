@@ -133,4 +133,26 @@ all numbers correct except resulting checksum.
 
 correct checksum: 11
 
+=============================
+
+generating seed data...
+[7 2 8 4 3 7 1 1 6 4 6 3 1 2 8 3 5 8 4 1 1 7 4 2]
+checksum calculation
+checksum: 25
+[7 2 8 4 3 7 1 1 6 4 6 3 1 2 8 3 5 8 4 1 1 7 2 5]
+[5 2 7 4 3 7 1 1 3 8 6 1 3 2 4 6 5 8 4 1 1 8 2 7]
+trio: 527, binary: 1000001111, 5-bit num 1: 10000, 5-bit num 2: 01111
+trio: 437, binary: 110110101, 5-bit num 1: 01101, 5-bit num 2: 10101
+trio: 113, binary: 1110001, 5-bit num 1: 00011, 5-bit num 2: 10001
+trio: 861, binary: 1101011101, 5-bit num 1: 11010, 5-bit num 2: 11101
+trio: 324, binary: 101000100, 5-bit num 1: 01010, 5-bit num 2: 00100
+trio: 658, binary: 1010010010, 5-bit num 1: 10100, 5-bit num 2: 10010
+trio: 411, binary: 110011011, 5-bit num 1: 01100, 5-bit num 2: 11011
+trio: 827, binary: 1100111011, 5-bit num 1: 11001, 5-bit num 2: 11011
+Result: VOAY465QLBRDZCUC
+
+all numbers correct except resulting checksum.
+
+correct checksum: 29
+
 
