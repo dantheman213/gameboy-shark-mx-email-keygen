@@ -65,7 +65,7 @@ func calculateChecksumFromSeed(seed string) string {
 		// even numbers
 		sum += getCharCodeAtIndex(seed, 2 * i + 1) - zeroAsciiCharVal
 	}
-	
+
 	sum %= 256
 
 	tens := 0
@@ -136,10 +136,11 @@ func calculateKeyCharsFromNumTrioGroups(scrambledKey string) string {
 }
 
 func binaryToDecimal(num int) int {
-	var remainder int
+	remainder := 0
 	index := 0
 	decimalNum := 0
-	for num != 0{
+
+	for num != 0 {
 		remainder = num % 10
 		num = num / 10
 		decimalNum = decimalNum + remainder * int(math.Pow(2, float64(index)))
@@ -161,6 +162,7 @@ func getCharCodeAtIndex(s string, n int) int {
 
 		i++
 	}
+
 	return 0
 }
 
