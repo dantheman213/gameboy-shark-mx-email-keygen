@@ -8,8 +8,7 @@ import (
 	"time"
 )
 
-var cipher string = "FMT4BIPW7ELSZAHOV6DKRY9GNU5CJQX8"
-
+// keygen steps
 // generate a random 24 digit number
 // generate and apply a valid checksum
 // jumble the 24 numbers in a preset pattern
@@ -17,118 +16,105 @@ var cipher string = "FMT4BIPW7ELSZAHOV6DKRY9GNU5CJQX8"
 // pack, shift and split the groups
 // pass the result through a crypt table generating a limited 16 character ASCII set
 
+var cipher string = "FMT4BIPW7ELSZAHOV6DKRY9GNU5CJQX8"
+
 func main() {
-	seedData := calculateRandomSeedArray()
-	seedData = applyChecksum(seedData, calculateChecksum(seedData))
-	seedData = byteShiftSeed(seedData)
-	calculateCharactersFromNumTrios(seedData)
+	fmt.Println("generating seed data...")
+	seed := calculateRandomSeed()
+	fmt.Println(seed)
+
+	checksum := calculateChecksumFromSeed(seed)
+	fmt.Println(checksum)
+
+	validKey := applyChecksumToSeed(seed, checksum)
+	fmt.Println(validKey)
+
+	scrambledKey := charSwapSeed(validKey)
+	fmt.Printf("Scrambled / Byte shifted key: %s\n", scrambledKey)
+
+	validRegistrationCode := calculateCharsFromNumTriosInSeed(scrambledKey)
+	fmt.Printf("Generated Shark MX ESN: %s\n", validRegistrationCode)
 }
 
-func calculateRandomSeedArray() [24]uint8 {
-	fmt.Println("generating seed data...")
+func calculateRandomSeed() string {
 	rand.Seed(time.Now().UnixNano())
 
-	var seedData [24]uint8
+	str := ""
 	for i := 0; i < 24; i++ {
 		// 0 is not a valid number to use here to avoid it
-		seedData[i] = byte(rand.Intn(8) + 1)
+		str += strconv.Itoa(rand.Intn(8) + 1)
 	}
 
-	fmt.Println(seedData)
-	return seedData
+	return str
 }
 
-func calculateChecksum(seedData [24]uint8) uint8 {
-	fmt.Println("checksum calculation")
-	// because of 0-index i numbers will look off
-	// Odd digits 1/24, 3/24 etc are doubled, if > 10 then 9 is subtracted. These values are added together.
-
-	var oddNumbersCalc uint8
-	for i := 0; i <= 21; i+=2 {
-		var num uint8 = seedData[i] * 2
-		if num > 10 {
-			num -= 9
+func calculateChecksumFromSeed(seed string) string {
+	sum := 0
+	zero := "0"
+	for i := 0; i < 11; i++ {
+		// odd numbers
+		a := (charCodeAt(seed, 2 * i) - charCodeAt(zero, 0)) * 2
+		if a > 9 {
+			a -= 9
 		}
 
-		oddNumbersCalc += num
+		sum += a
+
+		// even numbers
+		sum += charCodeAt(seed, 2 * i + 1) - charCodeAt(zero, 0)
 	}
 
-	// Even digits 2/24, 4/24 etc are just added together
-	var evenNumbersCalc uint8
-	for i := 1; i <= 21; i+=2 {
-		evenNumbersCalc += seedData[i]
+	sum %= 256
+
+	tens := 0
+	units := 0
+	if sum != 0 {
+		units = int(math.Ceil(float64(sum) / 10)) % 10
+		tens = (10 - (sum % 10)) % 10
 	}
 
-	checksum := evenNumbersCalc + oddNumbersCalc
-
-	fmt.Printf("checksum: %d\n", checksum)
-	return uint8(checksum)
+	return fmt.Sprintf("%d%d", tens, units)
 }
 
-func applyChecksum(seed [24]uint8, checksum uint8) [24]uint8 {
-	if checksum < 10 || checksum > 99 {
-		panic("try again")
-	}
-
-	slice := strconv.Itoa(int(checksum))
-	digit1, _ := strconv.Atoi(slice[:1])
-	digit2, _ := strconv.Atoi(slice[1:])
-
-	seed[22] = uint8(digit1)
-	seed[23] = uint8(digit2)
-
-	fmt.Println(seed)
-	return seed
+func applyChecksumToSeed(seed string, checksum string) string {
+	return fmt.Sprintf("%s%s", seed[0:len(seed) - 2], checksum)
 }
 
-// jumble the 24 numbers in a preset pattern
-// 1. byte 1 swap with byte 24
-// 2. byte 3 swap with byte 22
-// 3. byte 9 swap with byte 16
-// 4. byte 10 swap with byte 15
-// 5. byte 12 swap with byte 13
+func charSwapSeed(seed string) string {
+	str := seed
 
-func byteShiftSeed(seed [24]uint8) [24]uint8 {
-	temp := seed[23]
-	seed[23] = seed[0]
-	seed[0] = temp
+	temp := getCharInStringFromPos(str, 24)
+	str = setCharInStringAtPos(str, getCharInStringFromPos(str, 1), 24)
+	str = setCharInStringAtPos(str, temp, 1)
 
-	temp = seed[21]
-	seed[21] = seed[2]
-	seed[2] = temp
+	temp = getCharInStringFromPos(str, 22)
+	str = setCharInStringAtPos(str, getCharInStringFromPos(str, 3), 22)
+	str = setCharInStringAtPos(str, temp, 3)
 
-	temp = seed[15]
-	seed[15] = seed[8]
-	seed[8] = temp
+	temp = getCharInStringFromPos(str, 16)
+	str = setCharInStringAtPos(str, getCharInStringFromPos(str, 9), 16)
+	str = setCharInStringAtPos(str, temp, 9)
 
-	temp = seed[14]
-	seed[14] = seed[9]
-	seed[9] = temp
+	temp = getCharInStringFromPos(str, 15)
+	str = setCharInStringAtPos(str, getCharInStringFromPos(str, 10), 15)
+	str = setCharInStringAtPos(str, temp, 10)
 
-	temp = seed[12]
-	seed[12] = seed[11]
-	seed[11] = temp
+	temp = getCharInStringFromPos(str, 13)
+	str = setCharInStringAtPos(str, getCharInStringFromPos(str, 12), 13)
+	str = setCharInStringAtPos(str, temp, 12)
 
-	fmt.Println(seed)
-	return seed
+	return str
 }
 
-func calculateCharactersFromNumTrios(seed [24]uint8) string {
+func calculateCharsFromNumTriosInSeed(scrambledKey string) string {
 	result := ""
-	bytesToStr := ""
-	for k := 0; k < len(seed); k++ {
-		bytesToStr += strconv.Itoa(int(seed[k]))
-	}
 
 	for i := 0; i < 23; i += 3 {
-		trio, _ := strconv.Atoi(bytesToStr[i:i+3])
+		trio, _ := strconv.Atoi(scrambledKey[i:i+3])
 		binary10BitNumStr := strconv.FormatInt(int64(trio), 2)
-
 
 		binary5bitNum2Str := binary10BitNumStr[len(binary10BitNumStr) - 5: len(binary10BitNumStr)]
 		binary5bitNum1Str := binary10BitNumStr[0:len(binary10BitNumStr)-len(binary5bitNum2Str)]
-
-		fmt.Printf("trio: %d, binary: %s, 5-bit num 1: %05s, 5-bit num 2: %s\n", trio, binary10BitNumStr, binary5bitNum1Str, binary5bitNum2Str)
 
 		snum1, _ := strconv.Atoi(binary5bitNum1Str)
 		snum2, _ := strconv.Atoi(binary5bitNum2Str)
@@ -136,11 +122,14 @@ func calculateCharactersFromNumTrios(seed [24]uint8) string {
 		num1 := binaryToDecimal(snum1)
 		num2 := binaryToDecimal(snum2)
 
-		result += getCipherCharAtPos(num1)
-		result += getCipherCharAtPos(num2)
+		cipherChar1 := getCipherCharAtPos(num1)
+		cipherChar2 := getCipherCharAtPos(num2)
+
+		fmt.Printf("trio: %d converted to binary is: %s. Split up 10-bit number to 5-bit numbers..\n5-bit num 1: %05s = %d -> cipher at index: %s, 5-bit num 2: %s = %d -> cipher at index: %s\n\n", trio, binary10BitNumStr, binary5bitNum1Str, num1, cipherChar1, binary5bitNum2Str, num2, cipherChar2)
+
+		result += cipherChar1 + cipherChar2
 	}
 
-	fmt.Printf("Calculated Gameshark MX ESN Registration Code: %s\n", result)
 	return result
 }
 
@@ -159,4 +148,23 @@ func binaryToDecimal(num int) int {
 
 func getCipherCharAtPos(pos int) string {
 	return cipher[pos:pos+1]
+}
+
+func charCodeAt(s string, n int) int {
+	i := 0
+	for _, r := range s {
+		if i == n {
+			return int(r)
+		}
+		i++
+	}
+	return 0
+}
+
+func getCharInStringFromPos(str string, pos int) string {
+	return str[pos-1:pos]
+}
+
+func setCharInStringAtPos(str string, replacement string, pos int) string {
+	return str[:pos-1] + string(replacement) + str[pos:]
 }
