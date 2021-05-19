@@ -1,0 +1,24 @@
+Checksum calculation subroutine
+
+Differences:
+
+The checksum value is stored in C3DB.
+Odd digits 1/24, 3/24 etc are doubled, if > 10 then 9 is subtracted. // should be if > 9 (or if >= 10)
+These values are added together.
+Even digits 2/24, 4/24 etc are just added together.
+These two resulting numbers are added, converted to decimal and stored at C3DB.
+// The resulting number isn't actually just converted to decimal
+// - the units digit is: ceil(sum / 10) % 10 
+// - the tens digit is: (10 - (sum % 10)) % 10
+// If it was actually converted to decimal, the units digit would simply be floor(sum/10) and the units digit sum%10
+
+
+Summary:
+
+- Sum all the 22 first digits (converted from ASCII):
+  - The 1st, 3rd, ... digits are doubled, and if >= 10, subtract 9
+  - The 2nd, 4th, ... digits are simply added to the sum
+- The sum is % 256 (since it was stored in one byte on the GB)
+- Convert the sum to decimal using the following:
+  - The units digit is: ceil(sum / 10) % 10
+  - The tens digit is: (10 - (sum % 10)) % 10
