@@ -16,6 +16,7 @@ import (
 // pack, shift and split the groups
 // pass the result through a crypt table generating a limited 16 character ASCII set
 
+// Stored at 0xC000 in memory bus after a key has been entered to compare against
 var cipher string = "FMT4BIPW7ELSZAHOV6DKRY9GNU5CJQX8"
 
 func main() {
@@ -50,10 +51,11 @@ func calculateRandomSeed() string {
 
 func calculateChecksumFromSeed(seed string) string {
 	sum := 0
-	zero := "0"
+	zeroAsciiCharVal := getCharCodeAtIndex("0", 0) // 48
+
 	for i := 0; i < 11; i++ {
 		// odd numbers
-		a := (charCodeAt(seed, 2 * i) - charCodeAt(zero, 0)) * 2
+		a := (getCharCodeAtIndex(seed, 2 * i) - zeroAsciiCharVal) * 2
 		if a > 9 {
 			a -= 9
 		}
@@ -61,9 +63,9 @@ func calculateChecksumFromSeed(seed string) string {
 		sum += a
 
 		// even numbers
-		sum += charCodeAt(seed, 2 * i + 1) - charCodeAt(zero, 0)
+		sum += getCharCodeAtIndex(seed, 2 * i + 1) - zeroAsciiCharVal
 	}
-
+	
 	sum %= 256
 
 	tens := 0
@@ -122,8 +124,8 @@ func calculateKeyCharsFromNumTrioGroups(scrambledKey string) string {
 		num1 := binaryToDecimal(snum1)
 		num2 := binaryToDecimal(snum2)
 
-		cipherChar1 := getCipherCharAtPos(num1)
-		cipherChar2 := getCipherCharAtPos(num2)
+		cipherChar1 := getCipherCharAtIndex(num1)
+		cipherChar2 := getCipherCharAtIndex(num2)
 
 		fmt.Printf("trio: %d converted to binary is: %s. Split up 10-bit number to 5-bit numbers..\n5-bit num 1: %05s = %d -> cipher at index: %s, 5-bit num 2: %s = %d -> cipher at index: %s\n\n", trio, binary10BitNumStr, binary5bitNum1Str, num1, cipherChar1, binary5bitNum2Str, num2, cipherChar2)
 
@@ -146,16 +148,17 @@ func binaryToDecimal(num int) int {
 	return decimalNum
 }
 
-func getCipherCharAtPos(pos int) string {
-	return cipher[pos:pos+1]
+func getCipherCharAtIndex(idx int) string {
+	return cipher[idx:idx+1]
 }
 
-func charCodeAt(s string, n int) int {
+func getCharCodeAtIndex(s string, n int) int {
 	i := 0
 	for _, r := range s {
 		if i == n {
 			return int(r)
 		}
+
 		i++
 	}
 	return 0
