@@ -29,10 +29,10 @@ func main() {
 	validKey := applyChecksumToSeed(seed, checksum)
 	fmt.Println(validKey)
 
-	scrambledKey := charSwapSeed(validKey)
+	scrambledKey := byteShiftKey(validKey)
 	fmt.Printf("Scrambled / Byte shifted key: %s\n", scrambledKey)
 
-	validRegistrationCode := calculateCharsFromNumTriosInSeed(scrambledKey)
+	validRegistrationCode := calculateKeyCharsFromNumTrioGroups(scrambledKey)
 	fmt.Printf("Generated Shark MX ESN: %s\n", validRegistrationCode)
 }
 
@@ -80,8 +80,8 @@ func applyChecksumToSeed(seed string, checksum string) string {
 	return fmt.Sprintf("%s%s", seed[0:len(seed) - 2], checksum)
 }
 
-func charSwapSeed(seed string) string {
-	str := seed
+func byteShiftKey(key string) string {
+	str := key
 
 	temp := getCharInStringFromPos(str, 24)
 	str = setCharInStringAtPos(str, getCharInStringFromPos(str, 1), 24)
@@ -106,7 +106,7 @@ func charSwapSeed(seed string) string {
 	return str
 }
 
-func calculateCharsFromNumTriosInSeed(scrambledKey string) string {
+func calculateKeyCharsFromNumTrioGroups(scrambledKey string) string {
 	result := ""
 
 	for i := 0; i < 23; i += 3 {
