@@ -1,0 +1,36 @@
+This is a simple checksum and works like this:
+
+The checksum value is stored in C3DB. Odd digits 1/24, 3/24 etc are doubled, if > 10 then 9 is subtracted.
+These values are added together. Even digits 2/24, 4/24 etc are just added together. These two resulting numbers are
+added, converted to decimal and stored at C3DB. The subroutine then returns.
+
+ 6 6 9 6 4 9 6 4 4 8 4 3 7 5 2 6 4 6 6 1 6 7 7 3
+
+ EVEN:  669483566173
+ ODD:  694644724667
+
+6+6+9+4+8+3+5+6+6+1+7+3
+
+== 0x40
+== 64
+
+6 * 2 = 0xC - 0x9 = 0x3
+9 * 2 = 0x12 - 0x9 = 0x9
+4 * 2 = 0x8
+6 * 2 = 0xC - 0x9 = 0x3
+4 * 2 = 0x8
+4 * 2 = 0x8
+7 * 2 = 0xE
+2 * 2 = 0x4
+4 * 2 = 0x8
+6 * 2 = 0xC - 0x9 = 0x3
+6 * 2 = 0xC - 0x9 = 0x3
+7 * 2 = 0xE
+
+0x3 + 0x8 + 0x8 + 0x3 + 0x8 + 0x8 + 0xE + 0x4 + 0x8 + 0x3 + 0x3 + 0xE
+== 0x54
+== 84
+
+
+0x40 + 0x54 = 0x94 = 148
+

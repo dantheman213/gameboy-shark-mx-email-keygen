@@ -24,11 +24,11 @@ func main() {
 	calculateCharactersFromNumTrios(seedData)
 }
 
-func calculateRandomSeedArray() [24]byte {
+func calculateRandomSeedArray() [24]uint8 {
 	fmt.Println("generating seed data...")
 	rand.Seed(time.Now().UnixNano())
 
-	var seedData [24]byte
+	var seedData [24]uint8
 	for i := 0; i < 24; i++ {
 		// 0 is not a valid number to use here to avoid it
 		seedData[i] = byte(rand.Intn(8) + 1)
@@ -38,14 +38,14 @@ func calculateRandomSeedArray() [24]byte {
 	return seedData
 }
 
-func calculateChecksum(seedData [24]byte) uint8 {
+func calculateChecksum(seedData [24]uint8) uint8 {
 	fmt.Println("checksum calculation")
 	// because of 0-index i numbers will look off
 	// Odd digits 1/24, 3/24 etc are doubled, if > 10 then 9 is subtracted. These values are added together.
 
-	var oddNumbersCalc byte
+	var oddNumbersCalc uint8
 	for i := 0; i <= 21; i+=2 {
-		var num byte = seedData[i] * seedData[i]
+		var num uint8 = seedData[i] * 2
 		if num > 10 {
 			num -= 9
 		}
@@ -54,7 +54,7 @@ func calculateChecksum(seedData [24]byte) uint8 {
 	}
 
 	// Even digits 2/24, 4/24 etc are just added together
-	var evenNumbersCalc byte
+	var evenNumbersCalc uint8
 	for i := 1; i <= 21; i+=2 {
 		evenNumbersCalc += seedData[i]
 	}
@@ -65,7 +65,7 @@ func calculateChecksum(seedData [24]byte) uint8 {
 	return uint8(checksum)
 }
 
-func applyChecksum(seed [24]byte, checksum uint8) [24]byte {
+func applyChecksum(seed [24]uint8, checksum uint8) [24]uint8 {
 	if checksum < 10 || checksum > 99 {
 		panic("try again")
 	}
@@ -88,7 +88,7 @@ func applyChecksum(seed [24]byte, checksum uint8) [24]byte {
 // 4. byte 10 swap with byte 15
 // 5. byte 12 swap with byte 13
 
-func byteShiftSeed(seed [24]byte) [24]byte {
+func byteShiftSeed(seed [24]uint8) [24]uint8 {
 	temp := seed[23]
 	seed[23] = seed[0]
 	seed[0] = temp
@@ -113,7 +113,7 @@ func byteShiftSeed(seed [24]byte) [24]byte {
 	return seed
 }
 
-func calculateCharactersFromNumTrios(seed [24]byte) string {
+func calculateCharactersFromNumTrios(seed [24]uint8) string {
 	result := ""
 	bytesToStr := ""
 	for k := 0; k < len(seed); k++ {
